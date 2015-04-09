@@ -3,6 +3,8 @@
 
 typedef struct list {
                         int v;
+                        int block;
+                        int degree;
                         list *next;
                     } List;
 
