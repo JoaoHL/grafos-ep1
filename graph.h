@@ -2,20 +2,19 @@
 #define H_GRAPH
 
 typedef struct list {
-                        int v;
-                        int block;
-                        int degree;
-                        list *next;
+                        int vertex;
+                        int *block;
+                        int block_count;
+                        list *next_adj;
+                        list *next_stack;
                     } List;
 
 typedef struct graph {
                         int V;
-                        int E;
-                        list *adj;
+                        List **adj;
                      } Graph;
 
 Graph* graph_init();
-void add_vertex(Graph *G, int v, int *adj);
-int graph_free(Graph *G);
+void graph_free(Graph *G);
 
 #endif
