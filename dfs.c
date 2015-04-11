@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include "dfs.h"
+#include "graph.h"
 #include "stack.h"
 #define TRUE 1
 #define FALSE 0
 
-int *parent, *low, *d, *f, *children, *cutVertex;
-int time = 0, block = 0;
+int *parent, *low, *d, *children, *cutVertex, *degree;
+int time = 0, block = 0, cutVertex_counter = 0;
 
 int main() {
     Graph *G;
 
-    G = graph_init();
+    G = graph_init(degree);
     DFS_interface(G);
     DFS_result(G);
     graph_free(Graph *G);
@@ -18,7 +19,7 @@ int main() {
     return 0;
 }
 
-void DFSinterface(Graph *G) {
+void DFS_interface(Graph *G) {
     for (int v = 0; v < G->V; v++) {
         parent[v] = NULL;
         low[v] = -1;
@@ -39,13 +40,13 @@ void DFSinterface(Graph *G) {
     if (!(stackIsEmpty())){
         while (!(stackIsEmpty())){
             List *u = pop();
-            u->block[u->block_index] = block;
-            u->block_index++;
+            u->block[u->block_count] = block;
+            u->block_count++;
         }
     }
 }
 
-void DFSvisit(Graph *G, int u){
+void DFS_visit(Graph *G, int u){
         d[u] = time++;
         low[u] = d[u];
         
@@ -61,6 +62,7 @@ void DFSvisit(Graph *G, int u){
         }
         if (low[u] == d[u]){
             cutVertex[u] = TRUE;
+            cutVertex_counter++;
             block(G, u);
         }
         f[u] = time++;
@@ -69,13 +71,26 @@ void DFSvisit(Graph *G, int u){
 void block(Graph *G, int u) {
     List* v = pop();
     while (v->vertex != u) {
-        v->block[v->block_index++] = block;
+        v->block[block_count++] = block;
         v = pop();
     }
-    v->block[v->block_index++] = block;
+    v->block[v->block_count++] = block;
     push(v);
     block++;
 }
 
+void DFS_result(Graph *G){
+    printf("%d\n", G->V);
 
+    for (int i = 0; i < G->V; i++){
+        printf("%d", degree[i]);
+        
+        List *v = G->adj[i]->next_adj;
+        for (int j = 0; j < degree[i]; j++){
+            printf(" %d", v->block[j]);
+            v = v->next_adj;
+        }
+        printf("\n");
+    }
+}
 
